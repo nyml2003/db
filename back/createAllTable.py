@@ -123,10 +123,18 @@ create table Medicine(
  Munit varchar(20) not null,
  Mtype varchar(20) not null
 );
+create table Cashier(
+ Cno int not null primary key
+);
+INSERT INTO Cashier VALUES(09);
+INSERT INTO Cashier VALUES(01);
+INSERT INTO Cashier VALUES(02);
+INSERT INTO Cashier VALUES(05);
+INSERT INTO Cashier VALUES(08);
 
 create table Diagnosis(
  DGno varchar(20) primary key not null,
- Pno varchar(20) not null,
+ Pno int not null,
  FOREIGN KEY(Pno) REFERENCES Patient(Pno),
  Dno varchar(20) not null,
  FOREIGN KEY(Dno) REFERENCES Doctor(Dno),
@@ -136,6 +144,93 @@ create table Diagnosis(
  Rfee DECIMAL(12,4) not null
 );
 
+INSERT INTO Diagnosis VALUES(1645,481,140,);
+INSERT INTO Diagnosis VALUES();
+INSERT INTO Diagnosis VALUES();
+INSERT INTO Diagnosis VALUES();
+INSERT INTO Diagnosis VALUES();
+INSERT INTO Diagnosis VALUES();
+
+create table Recipe_Master(
+  RMno int not null primary key,
+  DeptNo int not null,
+  FOREIGN KEY(DeptNo) REFERENCES Dept(DeptNo),
+  Dno int not null,
+  FOREIGN KEY(Dno) REFERENCES Doctor(Dno),
+  Pno int not null,
+  FOREIGN KEY(Pno) REFERENCES Patient(Pno),
+  RMage int not null,
+  RMtime DATETIME not null
+);
+
+INSERT INTO Recipe_Master VALUES(1282317,103,140,181,12,'2016-7-21 01:12:01');
+INSERT INTO Recipe_Master VALUES(1282872,201,368,161,50,'2016-7-22 10:10:03');
+INSERT INTO Recipe_Master VALUES(1283398,20,73,481,23,'2016-7-23 10:59:42');
+INSERT INTO Recipe_Master VALUES(1284041,101,368,501,48,'2017-7-23 11:11:34');
+INSERT INTO Recipe_Master VALUES(1284256,103,21,201,36,'2017-7-23 02:01:05');
+INSERT INTO Recipe_Master VALUES(1458878,102,82,421,30,'2017-1-8 05:17:03');
+
+create table Recipe_Detail(
+ RDno int not null primary key,
+ RMno int not null,
+ FOREIGN KEY(RMno) REFERENCES Recipe_Master(RMno),
+ Mno int not null,
+ FOREIGN KEY(Mno) REFERENCES Medicine(Mno),
+ RDprice DECIMAL(12,4) not null,
+ RDnumber int not null,
+ RDunit varchar(20) not null
+);
+
+INSERT INTO Recipe_Detail VALUES(16,1282872,314941,200,3,'盒');
+INSERT INTO Recipe_Detail VALUES(32,1458878,315189,360,4,'盒');
+INSERT INTO Recipe_Detail VALUES(47,1284041,315977,14,1,'片');
+INSERT INTO Recipe_Detail VALUES(89,1282317,316910,2.5,10,'粒');
+
+create table Register_Form(
+ RFno int not null primary key,
+ RFdept int not null,
+ FOREIGN KEY(RFdept) REFERENCES Dept(DeptNo),
+ RFdoctor int not null,
+ FOREIGN KEY(RFdoctor) REFERENCES Doctor(Dno),
+ RFpatient int not null,
+ FOREIGN KEY(RFpatient) REFERENCES Patient(Pno),
+ RFcashier int not null,
+ FOREIGN KEY(RFcashier) REFERENCES Cashier(Cno),
+ RFtime DATETIME not null,
+ RFvisittime DATETIME not null,
+ RFfee DECIMAL(12,4) not null,
+ RFnotes varchar(20)
+);
+
+INSERT INTO Register_Form VALUES(13,20,73,481,01,'2016-7-11 06:12:09','2016-7-11 08:00:00',5,NULL);
+INSERT INTO Register_Form VALUES(56,201,368,161,08,'2016-7-28 09:20:19','2016-7-28 09:30:00',7,NULL);
+INSERT INTO Register_Form VALUES(71,103,140,181,09,'2017-1-10 16:09:02','2017-1-10 17:30:00',7,NULL);
+INSERT INTO Register_Form VALUES(89,102,82,421,02,'2017-3-16 19:18:10','2017-3-16 19:20:00',5,NULL);
+
+create table Fee(
+ Fno int not null primary key,
+ Fnumber varchar(20) not null,
+ Fdate DATETIME not null,
+ DGno int not null,
+ FOREIGN KEY(DGno) REFERENCES Diagnosis(DGno),
+ RMno int not null,
+ FOREIGN KEY(RMno) REFERENCES Recipe_Master(RMno),
+ Cno int not null,
+ FOREIGN KEY(Cno) REFERENCES Cashier(Cno),  
+ Pno int not null,
+ FOREIGN KEY(Pno) REFERENCES Patient(Pno),
+ FRecipefee DECIMAL(12,4) not null,
+ Fdiscount DECIMAL(12,4) not null,
+ Fsum DECIMAL(12,4) not null
+);
+
+INSERT INTO Fee VALUES(1281645,'02995606','2016-7-21 01:12:01',1645,1282317,09,181,200,0,200);
+INSERT INTO Fee VALUES(1282170,'02994356','2016-7-22 10:10:03',7816,1282872,01,481,189,37.8,151.2);
+INSERT INTO Fee VALUES(1283265,'02996768','2016-7-23 10:59:42',2170,1283998,02,501,560,112,448);
+INSERT INTO Fee VALUES(1283308,'02995687','2016-7-23 11:11:34',3308,1284041,05,201,17,3.4,13.6);
+INSERT INTO Fee VALUES(1283523,'02997432','2016-7-23 02:01:05',3523,1284256,08,481,13,0,13);
+INSERT INTO Fee VALUES(1457816,'02990101','2017-1-8 05:17:03',3265,1458878,09,21,111,0,111);
 """
+# FOREIGN KEY() REFERENCES (),
 ret=db.execute(sql)
 print(ret)
