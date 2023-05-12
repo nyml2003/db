@@ -2,7 +2,6 @@ from dataBase import DataBase
 
 db=DataBase()
 sql = """
-
 create table Patient(
  Pno int primary key COMMENT '患者编号',
  Pname varchar(20) not null COMMENT '患者姓名',
@@ -123,6 +122,9 @@ create table Medicine(
  Munit varchar(20) not null,
  Mtype varchar(20) not null
 );
+
+INSRT INTO Medicine VALUES(314172,12,'',0.037,'片','西药');
+
 create table Cashier(
  Cno int not null primary key
 );
@@ -144,12 +146,12 @@ create table Diagnosis(
  Rfee DECIMAL(12,4) not null
 );
 
-INSERT INTO Diagnosis VALUES(1645,481,140,);
-INSERT INTO Diagnosis VALUES();
-INSERT INTO Diagnosis VALUES();
-INSERT INTO Diagnosis VALUES();
-INSERT INTO Diagnosis VALUES();
-INSERT INTO Diagnosis VALUES();
+INSERT INTO Diagnosis VALUES(1645,481,140,'呼吸道感染','伤风感冒','2016-7-21 01:12:01',3);
+INSERT INTO Diagnosis VALUES(2170,201,21,'皮肤和软组织干扰','细菌感染','2016-7-22 10:10:03',5);
+INSERT INTO Diagnosis VALUES(3265,161,82,'胃溃疡','螺杆菌感染','2016-7-23 10:59:42',5);
+INSERT INTO Diagnosis VALUES(3308,181,82,'消化不良','胃病','2016-7-23 11:11:34',5);
+INSERT INTO Diagnosis VALUES(3523,501,73,'心力衰竭','高血压','2017-7-23 02:01:05',7);
+INSERT INTO Diagnosis VALUES(7816,421,368,'肾盂结石','肾结石','2017-1-8 05:17:03',3);
 
 create table Recipe_Master(
   RMno int not null primary key,
@@ -230,6 +232,7 @@ INSERT INTO Fee VALUES(1283265,'02996768','2016-7-23 10:59:42',2170,1283998,02,5
 INSERT INTO Fee VALUES(1283308,'02995687','2016-7-23 11:11:34',3308,1284041,05,201,17,3.4,13.6);
 INSERT INTO Fee VALUES(1283523,'02997432','2016-7-23 02:01:05',3523,1284256,08,481,13,0,13);
 INSERT INTO Fee VALUES(1457816,'02990101','2017-1-8 05:17:03',3265,1458878,09,21,111,0,111);
+
 """
 # FOREIGN KEY() REFERENCES (),
 ret=db.execute(sql)
