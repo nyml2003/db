@@ -20,6 +20,9 @@ export default {
   getAllDeptData() {
     return apiClient.get('/AllDeptData');
   },
+  getAllDoctorData() {
+    return apiClient.get('/AllDoctorData');
+  },
   shutdown() {
     return apiClient.post('/shutdown',{"content":"shutdown"});
   }

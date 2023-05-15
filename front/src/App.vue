@@ -12,6 +12,12 @@
       <el-icon><UserFilled /></el-icon>
       部门管理
     </el-menu-item>
+    <el-sub-menu index="">
+      <template #title><el-icon><UserFilled /></el-icon>员工管理</template>
+      <el-menu-item index="/doctor">
+        <el-icon><UserFilled /></el-icon>医生管理
+      </el-menu-item>
+    </el-sub-menu>
   </el-menu>
   <router-view/>
 </template>
