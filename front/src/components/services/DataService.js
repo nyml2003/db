@@ -17,4 +17,11 @@ export default {
   getAllPatientData() {
     return apiClient.get('/AllPatientData');
   },
+  getAllDeptData() {
+    return apiClient.get('/AllDeptData');
+  },
+  shutdown() {
+    return apiClient.post('/shutdown',{"content":"shutdown"});
+  }
+
 };
