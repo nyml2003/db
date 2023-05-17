@@ -1,84 +1,119 @@
 <template>
-  <el-dialog v-model="dialogFormVisible" title="编辑" draggable>
-    <el-form :model="formData" >
-      <el-form-item v-for="(value, key) in formData" :key="key" :label="columns.get(key)">
-        <el-input v-model="formData[key]"></el-input>
-      </el-form-item>
+  <el-dialog v-model="dialogFormVisible" title="编辑" draggable style="max-width: fit-content;" label-position="right">
+    <el-form>
+      <el-form-item v-for="col in dataColumns" :key="col" :prop="col" :label="columns.get(col)"><el-input v-model="formData[col]" :disabled="!isAdd && col === pk"></el-input></el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="update">
-          修改
-        </el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">
-          删除
-        </el-button>
+        
+        <div v-if="isAdd">
+          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button type="primary" @click="handleAdd">
+            添加
+          </el-button>
+        </div>
+        <div v-else>
+          <el-button @click="dialogFormVisible = false">取消</el-button>
+            <el-button type="primary" @click="update">
+            修改
+          </el-button>
+          <el-button type="primary" @click="handleDelete">
+            删除
+          </el-button>
+        </div>       
+        
       </span>
     </template>
   </el-dialog>
+  
   <el-main>
     <el-table 
       :data="tableData" @row-click="handleRowClick"
     >
       <el-table-column type="index"></el-table-column>
-      <el-table-column>
-        <el-input :placeholder=data>
-          
-        </el-input>
-      </el-table-column>
-      <el-table-column prop="Pname" :label="columns.get(`Pname`)"></el-table-column>
-      <el-table-column prop="Pid" :label="columns.get(`Pid`)"></el-table-column>
-      <el-table-column prop="Pino" :label="columns.get(`Pino`)"></el-table-column>
-      <el-table-column prop="Pmno" :label="columns.get(`Pmno`)"></el-table-column>
-      <el-table-column prop="Psex" :label="columns.get(`Psex`)"></el-table-column>
-      <el-table-column prop="Pbd" :label="columns.get(`Pbd`)"></el-table-column>
-      <el-table-column prop="Padd" :label="columns.get(`Padd`)"></el-table-column>
+      <el-table-column v-for="col in dataColumns" :key="col" :prop="col" :label="columns.get(col)"></el-table-column>
     </el-table>
   </el-main>
+  <el-footer>
+    <el-row style="{align-items: center;justify-content: center;  display: flex;}">
+      <el-button type="primary" @click="loadData">刷新</el-button>
+      <el-button type="primary" @click="handleAddButton">添加</el-button>
+    </el-row>
+  </el-footer>
 </template>
 
 <script setup>
 import DataService from "@/components/services/DataService.js"
 import { ref,onMounted } from "vue"
+import { useStore } from "vuex";
 const tableData=ref([])
-const columns=new Map([
-  ["Pno","患者编号"],
-  ["Pname","患者姓名"],
-  ["Pid","身份证号"],
-  ["Pino","社会保险号"],
-  ["Pmno","医疗卡识别号"],
-  ["Psex","性别"],
-  ["Pbd","出生日期"],
-  ["Padd","地址"],
-  ["单位电话","单位电话"],
-  ["家庭电话","家庭电话"],
-  ["手机","手机"]
-])
+const columns=useStore().state.columns
+const dataColumns=[
+  "Pno",
+  "Pname",
+  "Pid",
+  "Pino",
+  "Pmno",
+  "Psex",
+  "Pbd",
+  "Padd"
+]
+const table="`cs2305.patient`"
+const pk="Pno"
+const dateCol="Pbd"
 const loadData=async () => {
   const response  =await DataService.getAllPatientData()
-  tableData.value=response.data
+  if (response.data.status) {
+    console.log(response.data.status)
+  }
+  tableData.value=response.data.content
 }
 onMounted(loadData);
 const dialogFormVisible = ref(false)
 const formData = ref({})
+const isAdd= ref(false)
+let initFormData={}
 const handleRowClick=(row)=>{
-  console.log(row)
+  isAdd.value=false
   formData.value = { ...row };
+  initFormData={ ...row };
   dialogFormVisible.value = true
 }
 const update=()=>{
-  console.log(formData)
+  for (let key in formData.value) {
+    if(formData.value[key]!=initFormData[key]){
+      if (key===dateCol) {
+        let d=new Date(formData.value[key])
+        d=d - d.getTimezoneOffset()*60000
+        formData.value[key]=new Date(d).toISOString().slice(0, 10)
+      }
+      DataService.update(table,formData.value[pk],key,formData.value[key],pk)
+    }
+  }
   loadData()
 }
+const handleDelete=()=>{
+  DataService.delete(table,formData.value[pk],pk)
+  dialogFormVisible.value=false
+  loadData()
+}
+const handleAdd=()=>{
+  let data=[]
+  for (let key in formData.value) {
+    if (key===dateCol) {
+      let d=new Date(formData.value[key])
+      d=d - d.getTimezoneOffset()*60000
+      formData.value[key]=new Date(d).toISOString().slice(0, 10)
+    }
+    data.push(formData.value[key])
+  }
+  DataService.insert(table,data)
+  dialogFormVisible.value=false
+  loadData()
+}
+const handleAddButton=()=>{
+  isAdd.value=true
+  dialogFormVisible.value=true
+  formData.value={}
+}
 </script>
-
-<style>
-.el-table .warning-row {
-  background: oldlace;
-}
-
-.el-table .success-row {
-  background: #f0f9eb;
-}
-</style>
