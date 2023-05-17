@@ -26,7 +26,13 @@ export default {
   shutdown() {
     return apiClient.post('/shutdown',{"content":"shutdown"});
   },
-  update(table,id,col,value){
-    return apiClient.post('/update',{"table":table,"id":id,"col":col,"value":value})
-  }
+  update(table,id,col,value,pk){
+    return apiClient.post('/update',{"table":table,"id":id,"col":col,"value":value,"pk":pk});
+  },
+  delete(table,id,pk){
+    return apiClient.post('/delete',{"table":table,"id":id,"pk":pk});
+  },
+  insert(table,values){
+    return apiClient.post('/insert',{"table":table,"values":values});
+  } 
 };
