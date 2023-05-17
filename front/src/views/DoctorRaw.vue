@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="dialogFormVisible" title="编辑" draggable style="max-width: fit-content;" label-position="right">
     <el-form>
-      <el-form-item v-for="col in dataColumns" :key="col" :prop="col" :label="columns.get(col)"><el-input v-model="formData[col]" :disabled="!isAdd && col === pk"></el-input></el-form-item>
+      <el-form-item v-for="col in dataColumns" :key="col" :prop="col" :label="columns.get(col)"><el-input v-model="formData[col]" :disabled="!isAdd && disabledColumns.includes(col)"></el-input></el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
@@ -28,7 +28,7 @@
   
   <el-main>
     <el-table 
-      :data="tableData" @row-click="handleRowClick"
+      :data="tableData" @row-click="handleRowClick" border
     >
       <el-table-column type="index"></el-table-column>
       <el-table-column v-for="col in dataColumns" :key="col" :prop="col" :label="columns.get(col)"></el-table-column>
@@ -49,20 +49,21 @@ import { useStore } from "vuex";
 const tableData=ref([])
 const columns=useStore().state.columns
 const dataColumns=[
-  "Pno",
-  "Pname",
-  "Pid",
-  "Pino",
-  "Pmno",
-  "Psex",
-  "Pbd",
-  "Padd"
+  "Dno",
+  "Dname",
+  "Dsex",
+  "Dage",
+  "Ddeptno",
+  "Tno"
 ]
-const table="`cs2305.patient`"
-const pk="Pno"
-const dateCol="Pbd"
+const disabledColumns=[
+  "Dno"
+]
+const table="`cs2305.doctor`"
+const pk="Dno"
+const dateCol=null
 const loadData=async () => {
-  const response  =await DataService.getAllPatientData()
+  const response  =await DataService.getAllData(table)
   if (response.data.status) {
     console.log(response.data.status)
   }

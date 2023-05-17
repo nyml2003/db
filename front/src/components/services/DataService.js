@@ -14,14 +14,8 @@ const apiClient = axios.create({
 
 // 定义一个用于获取数据的函数
 export default {
-  getAllPatientData() {
-    return apiClient.post('/table',{table:"`cs2305.patient`"});
-  },
-  getAllDeptData() {
-    return apiClient.post('/table',{table:"`cs2305.dept`"});
-  },
-  getAllDoctorData() {
-    return apiClient.post('/table',{table:"`cs2305.doctor`"});
+  getAllData(table) {
+    return apiClient.post('/table',{'table':table});
   },
   shutdown() {
     return apiClient.post('/shutdown',{"content":"shutdown"});

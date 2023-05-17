@@ -22,11 +22,38 @@
         <el-icon><Postcard /></el-icon>医生
       </el-menu-item>
     </el-sub-menu> 
-    
+    <el-menu-item index="/Title">
+      <el-icon><Postcard /></el-icon>
+      职称
+    </el-menu-item>
+    <el-menu-item index="/Salary">
+      <el-icon><Postcard /></el-icon>
+      工资
+    </el-menu-item>
+    <el-menu-item index="/GoDown_Entry">
+      <el-icon><Postcard /></el-icon>
+      入库主单
+    </el-menu-item>
+    <el-menu-item index="/GoDown_Slave">
+      <el-icon><Postcard /></el-icon>
+      入库从单
+    </el-menu-item>
+    <el-menu-item index="/Medicine">
+      <el-icon><Postcard /></el-icon>
+      药品
+    </el-menu-item>
+    <el-menu-item index="/Diagnosis">
+      <el-icon><Postcard /></el-icon>
+      就诊
+    </el-menu-item>
     </el-sub-menu>
+    
  </el-menu>
 </el-aside>
+<el-main>
   <router-view/>
+</el-main>
+  
 </el-container>
 </template>
 
