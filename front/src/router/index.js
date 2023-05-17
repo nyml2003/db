@@ -59,6 +59,11 @@ const routes = [
     path: '/diagnosis',
     name: 'diagnosis',
     component: Diagnosis
+  },
+  {
+    path:'/data_raw/:table',
+    name:'data_raw',
+    component:()=>import('../views/DataRaw.vue')
   }
 ]
 
