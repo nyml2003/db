@@ -17,6 +17,9 @@ export default {
   getAllData(table) {
     return apiClient.post('/table',{'table':table});
   },
+  getView(view) {
+    return apiClient.post('/view',{'view':view});
+  },
   shutdown() {
     return apiClient.post('/shutdown',{"content":"shutdown"});
   },

@@ -1,4 +1,5 @@
 <template>
+  
   <el-dialog v-model="dialogFormVisible" title="编辑" draggable style="max-width: fit-content;" label-position="right">
     <el-form>
       <el-form-item v-for="col in dataColumns" :key="col" :prop="col" :label="columns.get(col)">
@@ -31,6 +32,7 @@
   </el-dialog>
   
   <el-main>
+
     <el-table 
       :data="tableData" @row-click="handleRowClick" border max-height="600" 
     >

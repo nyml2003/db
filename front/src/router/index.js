@@ -10,6 +10,11 @@ const routes = [
     path:'/data',
     name:'data',
     component:()=>import('../views/DataRaw.vue')
+  },
+  {
+    path:'/view',
+    name:'view',
+    component:()=>import('../views/DataView.vue')
   }
 ]
 
