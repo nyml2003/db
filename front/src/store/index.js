@@ -127,7 +127,7 @@ export default createStore({
         name: "入库子单",
         dataColumns: ["GMno","Mno","GSnumber","GSunit", "GSbatch", "GSprice", "GSexpdate"],
         table: "`cs2305.godown_slave`",
-        pk: "GSno",
+        pk: "GMno",
         dateCol: ["GSexpdate"],
         datetimeCol: [],
       },
@@ -143,7 +143,7 @@ export default createStore({
         name: "诊断信息",
         dataColumns: [ "Pno", "Dno", "Symptom","Diagnosis","DGtime","Rfee"],
         table: "`cs2305.diagnosis`",
-        pk: "DGno",
+        pk: "Pno",
         dateCol: [],
         datetimeCol: ["DGtime"]
       },

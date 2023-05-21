@@ -3,7 +3,7 @@
   <el-container>
     <el-aside style="width: fit-content">
       <el-menu
-        style="width: fit-content"
+      style="width: fit-content"
         class="el-menu-demo flex"
         router
         :default-active="$route.path"
@@ -26,7 +26,7 @@
     </el-aside>
     <el-main>
      
-      <router-view :key=this.$route.fullPath></router-view>
+      <router-view :key=$route.fullPath></router-view>
     </el-main>
   </el-container>
 </template>
