@@ -73,11 +73,12 @@ export default createStore({
       ["FRecipefee", "处方费用"],
       ["Fdiscount", "折扣"],
       ["Fsum", "实收金额"],
+      ["Ptel","手机号码"]
     ]),
     rawTableParanms: {
       patient: {
         name: "患者信息",
-        dataColumns: ["Pno","Pname","Pid","Pino","Pmno","Psex","Pbd","Padd",],
+        dataColumns: ["Pno","Pname","Pid","Pino","Pmno","Psex","Pbd","Padd","Ptel"],
         table: "`cs2305.patient`",
         pk: "Pno",
         dateCol: ["Pbd"],
@@ -173,11 +174,27 @@ export default createStore({
       },
       Fee:{
         name: "收费单",
-        dataColumns:["Fno","Fnumber","Fdate","DGno","Rno","Cno","Pno","FRecipefee","Fdiscount","Fsum"],
-        table: "`cs2305.Fee",
+        dataColumns:["Fno","Fnumber","Fdate","DGno","RMno","Cno","Pno","FRecipefee","Fdiscount","Fsum"],
+        table: "`cs2305.Fee`",
         pk: "Fno",
         dateCol: [],
         datetimeCol: ["Fdate"]
+      }
+    },
+    rawViewParanms: {
+      patient:{
+        name: "患者信息",
+        dataColumns:["Pno","Pname","Pid","Pino","Pmno","Psex","Pbd","Padd","Ptel"],
+        view: "patient_info",
+        dateCol: ["Pbd"],
+        datetimeCol: [],
+      },
+      doctor:{
+        name: "医生信息",
+        dataColumns:[ "Dname", "Dsex", "Dage","DeptName","Ttype","Ttrade","Slevel","Snumber"],
+        view: "doctor_info",
+        dateCol: [],
+        datetimeCol: [],
       }
     }
   },
