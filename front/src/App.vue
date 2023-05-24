@@ -1,12 +1,12 @@
 <template>
- 
-  <el-container>
-    <el-aside style="width: fit-content">
-      <el-menu
-      style="width: fit-content"
-        class="el-menu-demo flex"
+  <el-container style="width:100%">
+    <el-header>
+      <el-menu 
         router
         :unique-opened="true"
+        mode="horizontal"
+        class="el-menu-demo"
+        :ellipsis="false"
         :default-active="$route.path"
       >
         <el-menu-item index="/">
@@ -37,11 +37,17 @@
           <el-icon><Document /></el-icon>{{item.name}}
           </el-menu-item> 
         </el-sub-menu>
+        <div class="flex-grow" />
+        <el-menu-item>
+          <el-icon><User/></el-icon>  主页
+        </el-menu-item>
+        
       </el-menu>
-    </el-aside>
+
+    </el-header>
     <el-main>
       <router-view :key=$route.fullPath></router-view>
-    </el-main>
+    </el-main> 
   </el-container>
 </template>
 
@@ -50,6 +56,7 @@ import {useStore} from 'vuex'
 import { ref } from 'vue';
 const items=ref(useStore().state.rawTableParanms)
 const viewItems=ref(useStore().state.rawViewParanms)
+const whichPage=ref("login")
 </script>
 
 <style>
@@ -58,10 +65,19 @@ const viewItems=ref(useStore().state.rawViewParanms)
   height: 98%;
   width: 98%;
   display: flex;
+  padding: 0%;
+  margin: 0%;
   flex-direction: column;
   justify-content: space-between;
 }
-
+.flex-grow {
+  flex-grow: 1;
+}
+.el-header {
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+}
 .el-table--scrollable-x .el-table__body-wrapper {
   overflow-x: hidden;
 }</style>

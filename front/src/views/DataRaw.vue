@@ -70,6 +70,7 @@ const loadData=async () => {
     console.log(response.data.status)
   }
   tableData.value=response.data.content
+  console.log(tableData.value)
 }
 onMounted(loadData);
 const dialogFormVisible = ref(false)
