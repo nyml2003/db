@@ -31,5 +31,14 @@ export default {
   },
   insert(table,values){
     return apiClient.post('/insert',{"table":table,"values":values});
-  } 
+  },
+  login(username, password){
+    return apiClient.post('/login', {username:username,password:password});
+  },
+  register(username, password,role){
+    return apiClient.post('/register', {username:username,password:password,role:role});
+  },
+  select_profile(uid){
+    return apiClient.post('/SP', {uid:uid});
+  }
 };

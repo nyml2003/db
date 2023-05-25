@@ -1,65 +1,36 @@
 <template>
-    <el-row v-loading='loading'
-          :element-loading-spinner="svg"
-          element-loading-svg-view-box="-10, -10, 50, 50"
+    <el-row 
          class="info">
-        <el-avatar :size="50" :src="avatar"></el-avatar>
-        <p>{{ username }}</p>
+        <p>{{ name }}</p>
     <div class="button-wrapper">
-        <el-button type="primary" round @click="updateInfoDialog"><el-icon><Edit /></el-icon></el-button>
-        <el-button type="primary" round @click="isExit = true"><el-icon><Close /></el-icon></el-button>
+        <el-button type="primary" circle @click="updateInfoDialog"><el-icon><Edit /></el-icon></el-button>
+        <el-button type="primary" circle @click="isExit = true"><el-icon><Close /></el-icon></el-button>
     </div>
     </el-row>
     <!--基本信息显示区-->
-    <div v-loading='loading'
-          element-loading-text="Loading..."
-          :element-loading-spinner="svg"
-          element-loading-svg-view-box="-10, -10, 50, 50"
-           class="info2">
-        <el-row class="info3"><el-icon size="25" style="margin-right: 15px;"><PriceTag /></el-icon>{{ id }}</el-row>
-        <el-row class="info3"><el-icon size="25" style="margin-right: 15px;"><Message /></el-icon>{{ email }}</el-row>
-        <el-row class="info3"><el-icon size="25" style="margin-right: 15px;"><Iphone /></el-icon>{{ phone }}</el-row>
-        <el-row class="info3" style="border: none;"><el-icon size="25" style="margin-right: 15px;"><Timer /></el-icon>{{ time }}</el-row>
+    <div class="info2">
+        <el-row class="info3"><el-icon size="25" style="margin-right: 15px;"><PriceTag /></el-icon>{{ uid }}</el-row>
+        <el-row class="info3"><el-icon size="25" style="margin-right: 15px;"><PriceTag /></el-icon>{{ role }}</el-row>
+        <div v-if="role!='admin'">
+            <el-row class="info3"><el-icon size="25" style="margin-right: 15px;"><PriceTag /></el-icon>{{sex}}</el-row>
+        </div>
     </div>
-    <!--数据信息显示区-->
-    <el-row v-loading='loading'
-          :element-loading-spinner="svg"
-          element-loading-svg-view-box="-10, -10, 50, 50"
-           class="detail">
-        <div class="show_detail" @click="showBlogNum">
-            <div class="icon"><el-icon size="40"><ChatRound /></el-icon></div>
-            <div class="text">
-                <span class="line1">发表博客</span>
-                <span class="line2">{{ blognum }}</span>
-            </div>
-        </div>
-        <div class="show_detail" @click="showLike">
-            <div class="icon"><el-icon size="40"><Pointer /></el-icon></div>
-            <div class="text">
-                <span class="line1">收获点赞</span>
-                <span class="line2">{{ like }}</span>
-            </div>
-        </div>
-        <div class="show_detail" @click="showComment">
-            <div class="icon"><el-icon size="40"><Message /></el-icon></div>
-            <div class="text">
-                <span class="line1">收获评论</span>
-                <span class="line2">{{ comments_number }}</span>
-            </div>
-        </div>
-        <div class="show_detail" style="border-right: none;" @click="showView">
-            <div class="icon"><el-icon size="40"><View /></el-icon></div>
-            <div class="text">
-                <span class="line1">总浏览量</span>
-                <span class="line2">{{ views_number }}</span>
-            </div>
-        </div>
-    </el-row>
-    <!--修改信息对话框-->
-    <el-dialog v-model="dialogVisible" title="修改信息" width="500px">
+  <!-- 退出登录 -->
+  <el-dialog v-model="isExit" title="您是否要退出登录？" width="500px">
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="isExit = false">取消</el-button>
+        <el-button type="primary" @click="logout">
+          退出
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
+
+  <el-dialog v-model="dialogVisible" title="修改信息" width="500px">
     <el-row class="row">
         <el-col :span="5"><p style="font-size: 16px;"><el-icon size="20"><Camera/> </el-icon></p></el-col>
-        <el-col :span="15"><el-input v-model="avatar" size="small"></el-input></el-col>
+        <el-col :span="15"><el-input v-model="initData.avatar" size="small"></el-input></el-col>
     </el-row>
     <el-row class="row">
         <el-col :span="5"><p style="font-size: 16px;"><el-icon size="20"><PriceTag /></el-icon></p></el-col>
@@ -67,15 +38,15 @@
     </el-row>
         <el-row class="row">
         <el-col :span="5"><p style="font-size: 16px;"><el-icon size="20"><User /></el-icon></p></el-col>
-        <el-col :span="15"><el-input v-model="username" size="small"></el-input></el-col>
+        <el-col :span="15"><el-input v-model="initData.username" size="small"></el-input></el-col>
     </el-row>
     <el-row class="row">
         <el-col :span="5"><p style="font-size: 16px;"><el-icon size="20"><Message /></el-icon></p></el-col>
-        <el-col :span="15"><el-input v-model="email" size="small"></el-input></el-col>
+        <el-col :span="15"><el-input v-model="initData.email" size="small"></el-input></el-col>
     </el-row>
     <el-row class="row">
         <el-col :span="5"><p style="font-size: 16px;"><el-icon size="20"><Iphone /></el-icon></p></el-col>
-        <el-col :span="15"><el-input v-model="phone" size="small"></el-input></el-col>
+        <el-col :span="15"><el-input v-model="initData.phone_number" size="small"></el-input></el-col>
     </el-row>
     <el-row class="row">
         <el-col :span="5"><p style="font-size: 16px;"><el-icon size="20"><Timer /></el-icon></p></el-col>
@@ -90,136 +61,59 @@
       </span>
     </template>
   </el-dialog>
-  <!-- 退出登录 -->
-  <el-dialog v-model="isExit" title="您是否要退出登录？" width="500px">
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="isExit = false">取消</el-button>
-        <el-button type="primary" @click="logout">
-          退出
-        </el-button>
-      </span>
-    </template>
-  </el-dialog>
 </template>
 
 <script setup>
-import { onMounted, ref,computed } from 'vue'
+import { onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import {useStore} from 'vuex'
 import { useRouter } from 'vue-router'
-import DataService from './services/DataService'
+import DataService from '@/components/services/DataService'
 const store=useStore()
-const state=computed(()=>useStore().state)
-const username = ref(state.value.user.user_name)
-const avatar=ref(state.value.user.avatar)
-const dialogVisible = ref(false)
-const router = useRouter();
+const router = useRouter()
 const isExit = ref(false)
 const logout=()=>{
     isExit.value = false
-    console.log(state)
-    state.value.isLogin=false
-    state.value.user.avatar=null
-    state.value.user.user_name=null
-    state.value.user.id=null
+    store.commit("logout")
     ElMessage.success('退出成功！')
-    router.push({path:'/'})
+    router.push({path:'/login'})
 }
-let initData={}
-const updateInfoDialog = () => {
-    dialogVisible.value = true
-    initData={
-        id:id.value,
-        avatar:avatar.value,
-        email:email.value,
-        phone_number:phone.value,
-        created_time:time.value,
-        username:username.value,
-    }
-    console.log(initData)
-};
-const updateInfo= async()=>{
-    console.log(initData)
-    if(email.value!=initData.email){
-      const responce= await DataService.UpdateEmail(id.value,email.value)
-      console.log(responce.data)
-    }
-    if (phone.value != initData.phone_number) {
-        const responce = await DataService.UpdatePhone(id.value, phone.value)
-        console.log(responce.data)
-    }
-    if (username.value != initData.username) {
-        const responce = await DataService.UpdateName(id.value, username.value)
-        store.commit('setUser_name',username.value)
-        console.log(responce.data)
-    }
-    if (avatar.value != initData.avatar) {
-        const responce = await DataService.UpdateAvatar(id.value, avatar.value)
-        store.commit('setAvatar',avatar.value)
-        console.log(responce.data)
-    }
-    dialogVisible.value = false
-    ElMessage.success('修改成功！')
-}
-const email = ref('')
-const id = ref(state.value.user.id)
-const phone = ref()
-const time = ref('')
-const like = ref(0)
-const blognum = ref(0)
-const comments_number=ref(0)
-const views_number = ref(0)
-const loading = ref(true)
-const svg = `
-        <path class="path" d="
-          M 30 15
-          L 28 17
-          M 25.61 25.61
-          A 15 15, 0, 0, 1, 15 30
-          A 15 15, 0, 1, 1, 27.99 7.5
-          L 15 15
-        " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
-      `
+console.log(store.state.user)
+console.log('before uid')
+const uid = ref(store.state.user.uid)
+const username = ref('')
+const role=ref('')
+const sex=ref('')
+const name=ref('')
+
 const getPersonalInfo = async () => {
-    if (id.value === null) {
+    if (store.state.isLogin === false) {
         ElMessage.error('您还没有登录，请先登录！');
+        router.push({path:'/login'})
         return;
     }
     else {
-    loading.value = true
-    const responce = await DataService.select_profile(id.value)
-    blognum.value=responce.data.blogs_number
-    email.value=responce.data.email
-    phone.value=responce.data.phone_number
-    time.value=responce.data.created_time
-    like.value=responce.data.likes_number
-    comments_number.value=responce.data.comments_number
-    views_number.value = responce.data.views_number
-    loading.value = false
+        console.log(uid.value)
+        const responce = await DataService.select_profile(uid.value)
+        console.log(responce.data)
+        username.value = responce.data.username
+        role.value=responce.data.role
+        if (role.value==='医生'){
+            if (responce.data.Dname) name.value=responce.data.Dname
+            if (responce.data.Dsex) sex.value=responce.data.Dsex
+        }
+        else if (role.value==='患者'){
+            if (responce.data.Pname) name.value=responce.data.Pname
+            if (responce.data.Psex )sex.value=responce.data.Psex
+        }
+
     }
 };
-// const formatDatetime = (key) => {
-//     var json_date = new Date(key).toJSON();
-//     return new Date(new Date(json_date) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
-// }
+
 onMounted(getPersonalInfo)
-const showBlogNum = () => {
-    ElMessage('当前发表博客数：' + blognum.value);
-};
-
-const showLike = () => {
-    ElMessage('当前收获点赞数：' + like.value);
-};
-
-const showComment = () => {
-    ElMessage('当前收获评论数：' + comments_number.value);
-};
-
-const showView = () => {
-    ElMessage('当前浏览总数：' + views_number.value);
-};
-
+const updateInfoDialog=()=>{
+    
+}
 </script>
 
 <style scoped>

@@ -2,6 +2,12 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
+    isLogin:false,
+    user:{
+      uid:'',
+      username:'',
+      role:''
+    },
     columns: new Map([
       ["Pno", "患者编号"],
       ["Pname", "患者姓名"],
@@ -199,7 +205,20 @@ export default createStore({
     }
   },
   getters: {},
-  mutations: {},
+  mutations: {
+    setUser(state, user) {
+      state.user = user
+      state.isLogin = true
+    },
+    logout(state) {
+      state.isLogin=false
+      state.user={
+        uid:'',
+        username:'',
+        role:''
+      }
+    }
+  },
   actions: {},
   modules: {},
 });

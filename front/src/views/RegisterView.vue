@@ -2,7 +2,7 @@
   <el-row style="align-items: center; justify-content: center; height:100% width:100%">
     <el-form
       ref="form"
-      :model="{username,email,password,confirmpassword}"
+      :model="{username,password,confirmpassword}"
       :rules="rules"
       status-icon
       label-position="top"
@@ -13,11 +13,15 @@
       <el-form-item label="用户名" prop="username">
         <el-input v-model="username" placeholder="用户名长度为1-10，由数字、字母、汉字组成"></el-input>
       </el-form-item>
-      <el-form-item label="邮箱" prop="email">
-        <el-input v-model="email" placeholder="请填写您的邮箱"></el-input>
-      </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input v-model="password" placeholder="密码长度为1-15，由数字、字母组成"></el-input>
+      </el-form-item>
+      <el-form-item label="身份" prop="role">
+        <el-radio-group v-model="role">
+          <el-radio label="patient">患者</el-radio>
+          <el-radio label="doctor">医生</el-radio>
+          <el-radio label="admin">管理员</el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="确认密码" prop="confirmpassword">
         <el-input v-model="confirmpassword" placeholder="请确认您的密码"></el-input>
@@ -37,16 +41,14 @@ import DataService from '@/components/services/DataService'
 import { useStore} from 'vuex'
 import router from '@/router';
 const form=ref(null)
+const role=ref('patient')
 const rules = {
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
     { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' },
     { pattern: /^[a-zA-Z0-9\u4e00-\u9fa5]+$/, message: '用户名只能包含数字、字母、汉字', trigger: 'blur' }
   ],
-  email: [
-    { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-    { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
-  ],
+
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
     { min: 1, max: 15, message: '长度在 1 到 15 个字符', trigger: 'blur' },
@@ -66,12 +68,11 @@ const rules = {
 const store=useStore()
 const password=ref('')
 const username=ref('')
-const email=ref('')
 const confirmpassword=ref('')
 const postData=async()=>{
-  const response=await DataService.Register(username.value,password.value,email.value)
+  const response=await DataService.register(username.value,password.value,role.value)
   console.log(response.data)
-  store.commit("Register",response.data)
+  store.commit("setUser",response.data.user)
   router.push({path:'/MyPage'})
 }
 const submit=(() => {

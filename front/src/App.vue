@@ -15,7 +15,7 @@
           </el-icon>
           首页
         </el-menu-item>
-        <el-sub-menu index=1>
+        <el-sub-menu index=1 v-if="store.state.user.role=='admin'">
           <template #title><el-icon><Filter /></el-icon>原始数据</template>   
           <el-menu-item
           v-for="(item,id) in items"
@@ -26,7 +26,7 @@
           <el-icon><Document /></el-icon>{{item.name}}
           </el-menu-item> 
         </el-sub-menu>
-        <el-sub-menu index=2>
+        <el-sub-menu index=2 v-if="store.state.user.role=='admin'">
           <template #title><el-icon><Filter /></el-icon>视图</template>   
           <el-menu-item
           v-for="(item,id) in viewItems"
@@ -38,7 +38,7 @@
           </el-menu-item> 
         </el-sub-menu>
         <div class="flex-grow" />
-        <el-menu-item>
+        <el-menu-item index="/MyPage" >
           <el-icon><User/></el-icon>  主页
         </el-menu-item>
         
@@ -54,9 +54,16 @@
 <script setup>
 import {useStore} from 'vuex'
 import { ref } from 'vue';
+import { onMounted } from 'vue'
+import {useRouter} from 'vue-router'
+const router=useRouter()
+const store=useStore()
+// setInterval(()=>{
+//   if (store.state.isLogin===false) router.push({path:'/login'})
+// },1000)
 const items=ref(useStore().state.rawTableParanms)
 const viewItems=ref(useStore().state.rawViewParanms)
-const whichPage=ref("login")
+
 </script>
 
 <style>
