@@ -1,24 +1,41 @@
-# miner
+### 部署前端代码
 
-## Project setup
+前端github仓库
+
+https://github.com/nyml2003/WordWanderers
+
+clone下来
+
+你需要保证自己安装了node.js和npm,
+
+#### 初始化（下载node_modules）
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+#### 编译+热更新
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+如果要在localhost上通信，请把
 
-### Lints and fixes files
 ```
-npm run lint
+/src/components/services/DataService.js
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+修改代码
+```javascript
+const apiClient = axios.create({
+  // 设置后端 API 的基础 URL
+  baseURL: "http://host:port/api",
+  // 设置请求头
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+});
+```
+中的baseURL
+```
+baseURL: "http://localhost:port/api"
+```
