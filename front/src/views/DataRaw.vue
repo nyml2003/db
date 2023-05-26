@@ -53,6 +53,7 @@ import DataService from "@/components/services/DataService.js"
 import { ref,onMounted } from "vue"
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
+import { ElNotification } from "element-plus";
 const tableData=ref([])
 const columns=useStore().state.columns
   const childParams=JSON.parse(useRoute().query.item)
@@ -66,9 +67,6 @@ const disabledColumns=[
 ]
 const loadData=async () => {
   const response  =await DataService.getAllData(table)
-  if (response.data.status) {
-    console.log(response.data.status)
-  }
   tableData.value=response.data.content
   console.log(tableData.value)
 }
@@ -94,29 +92,54 @@ const formatData = (key) => {
     formData.value[key] = new Date(d).toISOString().slice(0, 19).replace('T', ' ')
   }
 }
-const update=()=>{
+const update=async()=>{
   for (let key in formData.value) {
     if(formData.value[key]!=initFormData[key]){
       formatData(key)
-      DataService.update(table,formData.value[pk],key,formData.value[key],pk)
+      const response=await DataService.update(table,formData.value[pk],key,formData.value[key],pk)
+      console.log(response.data)
+      if (response.data.error===false)
+      ElNotification({
+        title:"提交失败",
+        message:response.data.content
+      })
+      else  ElNotification({
+        title:"提交成功",
+      })
       console.log([table,formData.value[pk],key,formData.value[key],pk])
     }
   }
   dialogFormVisible.value=false
   setTimeout(loadData,500);
 }
-const handleDelete=()=>{
-  DataService.delete(table,formData.value[pk],pk)
+const handleDelete=async()=>{
+  const response=await DataService.delete(table,formData.value[pk],pk);
+  if (response.data.error===false)
+      ElNotification({
+        title:"提交失败",
+        message:response.data.content
+      })
+      else  ElNotification({
+        title:"提交成功",
+      })
   dialogFormVisible.value=false
   setTimeout(loadData,500);
 }
-const handleAdd=()=>{
+const handleAdd=async()=>{
   let data=[]
   for (let key in formData.value) {
     formatData(key)
     data.push(formData.value[key])
   }
-  DataService.insert(table,data)
+  const response=await DataService.insert(table,data)
+  if (response.data.error===false)
+      ElNotification({
+        title:"提交失败",
+        message:response.data.content
+      })
+      else  ElNotification({
+        title:"提交成功",
+      })
   dialogFormVisible.value=false
   setTimeout(loadData,500);
 }

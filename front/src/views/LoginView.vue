@@ -5,7 +5,7 @@
     label-width="80px"
     style="width: fit-content;"
   >
-    <h2 class="login_title">登录 医院业务管理系统</h2>
+    <h2 class="login_title">登录 CS2305.HIS管理系统</h2>
       <el-form-item label="用户名">
         <el-input v-model="username" placeholder="Username"></el-input>
       </el-form-item>
@@ -18,7 +18,7 @@
         </el-col>
       </el-form-item>
    <div class="login_register">
-      <p>Don't have a Hospital Information System account yet?</p>
+      <p>Don't have a CS2305.HIS account yet?</p>
       <router-link to="/register" style="color:rgb(47,110,195);">Get started here</router-link>
     </div>
   </el-form>

@@ -9,7 +9,7 @@
       label-width="100px"
       max-width="800px"
     >
-      <h2 class="register_title">欢迎来到 Word Wanderers</h2>
+      <h2 class="register_title">欢迎使用CS2305.HIS管理系统</h2>
       <el-form-item label="用户名" prop="username">
         <el-input v-model="username" placeholder="用户名长度为1-10，由数字、字母、汉字组成"></el-input>
       </el-form-item>

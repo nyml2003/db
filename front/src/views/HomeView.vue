@@ -6,7 +6,7 @@
     style="width: fit-content;"
   >
     <el-col :span="24">
-      <p>欢迎使用医院业务管理系统</p>
+      <p>欢迎使用CS2305.HIS管理系统</p>
     </el-col>
   <el-row>
     <el-col :span="8">
