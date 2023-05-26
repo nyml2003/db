@@ -6,8 +6,10 @@ export default createStore({
     user:{
       uid:'',
       username:'',
-      role:''
+      role:'',
     },
+    Pno:'',
+    isDataExist:false,
     columns: new Map([
       ["Pno", "患者编号"],
       ["Pname", "患者姓名"],
@@ -79,7 +81,9 @@ export default createStore({
       ["FRecipefee", "处方费用"],
       ["Fdiscount", "折扣"],
       ["Fsum", "实收金额"],
-      ["Ptel","手机号码"]
+      ["Ptel","手机号码"],
+      ["uid","uid"],
+      ['username','用户名'],
     ]),
     rawTableParanms: {
       patient: {
@@ -140,7 +144,7 @@ export default createStore({
       },
       medicine: {
         name: "药品信息",
-        dataColumns: ["Mno", "Mname", "Munit", "Mprice", "Mexpdate"],
+        dataColumns: ["Mno", "Mname", "Munit", "Mprice", "Mtype"],
         table: "`cs2305.medicine`",
         pk: "Mno",
         dateCol: [],
@@ -201,8 +205,15 @@ export default createStore({
         view: "doctor_info",
         dateCol: [],
         datetimeCol: [],
-      }
-    }
+      }, 
+    },
+    RegisterFormView:{
+        name: "挂号单",
+        dataColumns:["RFno","DeptName","Dname","Pname","RFcashier","RFtime","RFvisittime","RFfee","RFnotes"],
+        view: "RegisterFormView",
+        dateCol: [],
+        datetimeCol: ["RFtime","RFvisittime"]
+      }  
   },
   getters: {},
   mutations: {
@@ -217,6 +228,12 @@ export default createStore({
         username:'',
         role:''
       }
+    },
+    setPno(state,pno){
+      state.Pno=pno
+    },
+    setDataExisit(state,isDataExist){
+      state.isDataExist=isDataExist
     }
   },
   actions: {},

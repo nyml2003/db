@@ -30,6 +30,16 @@ const routes = [
     path:'/MyPage',
     name:'MyPage',
     component:()=>import('../views/personalInfo.vue')
+  },
+  {
+    path:'/guahao',
+    name:'guahao',
+    component:()=>import('../views/guahaoView.vue')
+  },
+  {
+    path:'/guahaoList',
+    name:'guahaoList',
+    component:()=>import('../views/guahaoListView.vue')
   }
 ]
 

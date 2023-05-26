@@ -2,6 +2,7 @@
   <el-container style="width:100%">
     <el-header>
       <el-menu 
+      v-if="store.state.isLogin"
         router
         :unique-opened="true"
         mode="horizontal"
@@ -37,6 +38,18 @@
           <el-icon><Document /></el-icon>{{item.name}}
           </el-menu-item> 
         </el-sub-menu>
+        <el-menu-item v-if="store.state.user.role=='patient'" index="/guahao">
+          <el-icon>
+            <HomeFilled />
+          </el-icon>
+          挂号
+        </el-menu-item>
+        <el-menu-item v-if="store.state.user.role=='patient'" index="/guahaoList">
+          <el-icon>
+            <HomeFilled />
+          </el-icon>
+          挂号列表
+        </el-menu-item>
         <div class="flex-grow" />
         <el-menu-item index="/MyPage" >
           <el-icon><User/></el-icon>  主页
@@ -54,13 +67,7 @@
 <script setup>
 import {useStore} from 'vuex'
 import { ref } from 'vue';
-import { onMounted } from 'vue'
-import {useRouter} from 'vue-router'
-const router=useRouter()
 const store=useStore()
-// setInterval(()=>{
-//   if (store.state.isLogin===false) router.push({path:'/login'})
-// },1000)
 const items=ref(useStore().state.rawTableParanms)
 const viewItems=ref(useStore().state.rawViewParanms)
 

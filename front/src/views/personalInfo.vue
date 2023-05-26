@@ -1,7 +1,7 @@
 <template>
     <el-row 
          class="info">
-        <p>{{ name }}</p>
+        <p>个人信息</p>
     <div class="button-wrapper">
         <el-button type="primary" circle @click="updateInfoDialog"><el-icon><Edit /></el-icon></el-button>
         <el-button type="primary" circle @click="isExit = true"><el-icon><Close /></el-icon></el-button>
@@ -9,11 +9,7 @@
     </el-row>
     <!--基本信息显示区-->
     <div class="info2">
-        <el-row class="info3"><el-icon size="25" style="margin-right: 15px;"><PriceTag /></el-icon>{{ uid }}</el-row>
-        <el-row class="info3"><el-icon size="25" style="margin-right: 15px;"><PriceTag /></el-icon>{{ role }}</el-row>
-        <div v-if="role!='admin'">
-            <el-row class="info3"><el-icon size="25" style="margin-right: 15px;"><PriceTag /></el-icon>{{sex}}</el-row>
-        </div>
+        <el-row v-for="key in Object.keys(person).filter(key => !keysToFilter.includes(key))" :key="key" :label="key" class="info3"><el-icon size="25" style="margin-right: 15px;"><PriceTag /></el-icon>{{columns.get(key)+":"+person[key] }}</el-row>
     </div>
   <!-- 退出登录 -->
   <el-dialog v-model="isExit" title="您是否要退出登录？" width="500px">
@@ -28,30 +24,12 @@
   </el-dialog>
 
   <el-dialog v-model="dialogVisible" title="修改信息" width="500px">
-    <el-row class="row">
-        <el-col :span="5"><p style="font-size: 16px;"><el-icon size="20"><Camera/> </el-icon></p></el-col>
-        <el-col :span="15"><el-input v-model="initData.avatar" size="small"></el-input></el-col>
-    </el-row>
-    <el-row class="row">
-        <el-col :span="5"><p style="font-size: 16px;"><el-icon size="20"><PriceTag /></el-icon></p></el-col>
-        <el-col :span="15"><el-input disabled v-model="id" size="small"></el-input></el-col>
-    </el-row>
-        <el-row class="row">
-        <el-col :span="5"><p style="font-size: 16px;"><el-icon size="20"><User /></el-icon></p></el-col>
-        <el-col :span="15"><el-input v-model="initData.username" size="small"></el-input></el-col>
-    </el-row>
-    <el-row class="row">
-        <el-col :span="5"><p style="font-size: 16px;"><el-icon size="20"><Message /></el-icon></p></el-col>
-        <el-col :span="15"><el-input v-model="initData.email" size="small"></el-input></el-col>
-    </el-row>
-    <el-row class="row">
-        <el-col :span="5"><p style="font-size: 16px;"><el-icon size="20"><Iphone /></el-icon></p></el-col>
-        <el-col :span="15"><el-input v-model="initData.phone_number" size="small"></el-input></el-col>
-    </el-row>
-    <el-row class="row">
-        <el-col :span="5"><p style="font-size: 16px;"><el-icon size="20"><Timer /></el-icon></p></el-col>
-        <el-col :span="15"><el-input disabled v-model="time" size="small"></el-input></el-col>
-    </el-row>
+    <el-form  label-position="top">
+        <el-form-item v-for="key in Object.keys(initData).filter(key => !keysToFilter.includes(key))" :key="key" :label="columns.get(key)">
+            <el-date-picker v-if="dateCol.includes(key)" v-model="initData[key]" type="date"></el-date-picker>
+            <el-input v-else v-model="initData[key]"></el-input>
+        </el-form-item>
+    </el-form>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
@@ -78,41 +56,57 @@ const logout=()=>{
     ElMessage.success('退出成功！')
     router.push({path:'/login'})
 }
-console.log(store.state.user)
-console.log('before uid')
-const uid = ref(store.state.user.uid)
-const username = ref('')
-const role=ref('')
-const sex=ref('')
-const name=ref('')
 
+const uid = ref(store.state.user.uid)
+const person=ref('')
+const keysToFilter=ref(['uid','role','Pno','Dno','password'])
+let table=``
+const dialogVisible = ref(false)
+const initData = ref({})
+const dateCol = ['Pbd']
+const formatData = (key) => {
+  if (dateCol.includes(key)) {
+    let d = new Date(initData.value[key])
+    d = d - d.getTimezoneOffset() * 60000
+    initData.value[key] = new Date(d).toISOString().slice(0, 10)
+  }
+}
+const columns=useStore().state.columns
 const getPersonalInfo = async () => {
     if (store.state.isLogin === false) {
         ElMessage.error('您还没有登录，请先登录！');
         router.push({path:'/login'})
         return;
     }
-    else {
-        console.log(uid.value)
-        const responce = await DataService.select_profile(uid.value)
-        console.log(responce.data)
-        username.value = responce.data.username
-        role.value=responce.data.role
-        if (role.value==='医生'){
-            if (responce.data.Dname) name.value=responce.data.Dname
-            if (responce.data.Dsex) sex.value=responce.data.Dsex
-        }
-        else if (role.value==='患者'){
-            if (responce.data.Pname) name.value=responce.data.Pname
-            if (responce.data.Psex )sex.value=responce.data.Psex
-        }
-
+    else if (store.state.user.role !== 'admin') {
+        table=`cs2305.${store.state.user.role}`
+        let responce = await DataService.search(table,"uid",uid.value)
+        person.value=responce.data['content'][0]
+        store.commit("setPno",person.value['Pno'])
+    }else{
+        table="cs2305.user"
+        let responce = await DataService.search(table,"uid",uid.value)
+        person.value=responce.data['content'][0]
     }
 };
 
 onMounted(getPersonalInfo)
-const updateInfoDialog=()=>{
-    
+const updateInfoDialog = () => {
+    dialogVisible.value = true
+    console.log(person.value)
+    initData.value=JSON.parse(JSON.stringify(person.value))
+};
+const updateInfo= async()=>{
+    Object.keys(person.value).forEach(key => {
+        if (person.value[key] !== initData.value[key]) {
+            formatData(key)
+            person.value[key]=initData.value[key]
+            DataService.update( '`'+table+ '`',uid.value,key, initData.value[key], "uid")
+            console.log(['`'+table+ '`',uid.value,key, initData.value[key], "uid"])
+        }
+    })
+    dialogVisible.value = false
+    ElMessage.success('修改成功！')
 }
 </script>
 

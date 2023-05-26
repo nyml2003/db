@@ -40,5 +40,20 @@ export default {
   },
   select_profile(uid){
     return apiClient.post('/SP', {uid:uid});
+  },
+  search(table,col,value){
+    return apiClient.post('/search',{"table":table,"col":col,"value":value});
+  },
+  guahao(table,values){
+    return apiClient.post('/guahao',{"table":table,"values":values});
+  },
+  deleteAllTables(){
+    return apiClient.post('/deleteAllTables');
+  },
+  createAllTables(){
+    return apiClient.post('/createAllTables');
+  },
+  hasTable(){
+    return apiClient.get('/hasTable');
   }
 };

@@ -72,7 +72,7 @@ const loadData=async () => {
   tableData.value=response.data.content
   console.log(tableData.value)
 }
-onMounted(loadData);
+onMounted( loadData)
 const dialogFormVisible = ref(false)
 const formData = ref({})
 const isAdd= ref(false)
@@ -99,15 +99,16 @@ const update=()=>{
     if(formData.value[key]!=initFormData[key]){
       formatData(key)
       DataService.update(table,formData.value[pk],key,formData.value[key],pk)
+      console.log([table,formData.value[pk],key,formData.value[key],pk])
     }
   }
   dialogFormVisible.value=false
-  loadData()
+  setTimeout(loadData,500);
 }
 const handleDelete=()=>{
   DataService.delete(table,formData.value[pk],pk)
   dialogFormVisible.value=false
-  loadData()
+  setTimeout(loadData,500);
 }
 const handleAdd=()=>{
   let data=[]
@@ -117,7 +118,7 @@ const handleAdd=()=>{
   }
   DataService.insert(table,data)
   dialogFormVisible.value=false
-  loadData()
+  setTimeout(loadData,500);
 }
 const handleAddButton=()=>{
   isAdd.value=true
