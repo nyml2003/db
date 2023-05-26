@@ -1,8 +1,8 @@
 ### 部署前端代码
 
-前端github仓库
+github仓库
 
-https://github.com/nyml2003/WordWanderers
+https://github.com/nyml2003/db
 
 clone下来
 
